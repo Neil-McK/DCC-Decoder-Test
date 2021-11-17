@@ -459,9 +459,9 @@ void ParsePulseCommand(char *c) {
         (bitValue >= 0 && bitValue <= 1) &&
         (bitHalfLength >= 10 && bitHalfLength <= 200)) {
     SetPulseWidth(bitValue, bitHalfLength);
-    INTERFACE.print("<O>");
+    INTERFACE.println("<O>");
   } else
-    INTERFACE.print("<X>");
+    INTERFACE.println("<X>");
 }
 /* NMCK ADDED END ==================================*/
 

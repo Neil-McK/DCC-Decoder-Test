@@ -132,7 +132,7 @@ void RegisterList::setThrottle(char *s) volatile{
   INTERFACE.print(nReg); INTERFACE.print(" ");
   INTERFACE.print(tSpeed); INTERFACE.print(" ");
   INTERFACE.print(tDirection);
-  INTERFACE.print(">");
+  INTERFACE.println(">");
   
   speedTable[nReg]=tDirection==1?tSpeed:-tSpeed;
     
@@ -183,6 +183,8 @@ void RegisterList::setAccessory(char *s) volatile{
   b[1]=((((aAdd/64)%8)<<4) + (aNum%4<<1) + activate%2) ^ 0xF8;      // second byte is of the form 1AAACDDD, where C should be 1, and the least significant D represent activate/deactivate
       
   loadPacket(0,b,2,4,1);
+
+  INTERFACE.println("<O>");
       
 } // RegisterList::setAccessory()
 
@@ -202,6 +204,8 @@ void RegisterList::writeTextPacket(char *s) volatile{
   }
          
   loadPacket(nReg,b,nBytes,0,1);
+
+  INTERFACE.println("<O>");
     
 } // RegisterList::writeTextPacket()
 
@@ -231,9 +235,9 @@ void RegisterList::checkForAck() volatile {
 void RegisterList::readCV(char *s) volatile{
   byte bRead[4];
   int bValue;
-  int cv, callBack, callBackSub;
+  int cv;
 
-  if(sscanf(s,"%d %d %d",&cv,&callBack,&callBackSub)!=3)          // cv = 1-1024
+  if(sscanf(s,"%d",&cv)!=1)          // cv = 1-1024
     return;    
   cv--;                              // actual CV addresses are cv-1 (0-1023)
   
@@ -272,15 +276,11 @@ void RegisterList::readCV(char *s) volatile{
   if(!ackReceived)    // verify unsuccessful
     bValue=-1;
 
-  INTERFACE.print("<r");
-  INTERFACE.print(callBack);
-  INTERFACE.print("|");
-  INTERFACE.print(callBackSub);
-  INTERFACE.print("|");
+  INTERFACE.print("<r ");
   INTERFACE.print(cv+1);
   INTERFACE.print(" ");
   INTERFACE.print(bValue);
-  INTERFACE.print(">");
+  INTERFACE.println(">");
         
 } // RegisterList::readCV()
 
@@ -289,9 +289,9 @@ void RegisterList::readCV(char *s) volatile{
 void RegisterList::writeCVByte(char *s) volatile{
   byte bWrite[4];
   int bValue;
-  int cv, callBack, callBackSub;
+  int cv;
 
-  if(sscanf(s,"%d %d %d %d",&cv,&bValue,&callBack,&callBackSub)!=4)          // cv = 1-1024
+  if(sscanf(s,"%d %d",&cv,&bValue)!=2)          // cv = 1-1024
     return;    
   cv--;                              // actual CV addresses are cv-1 (0-1023)
   
@@ -318,15 +318,11 @@ void RegisterList::writeCVByte(char *s) volatile{
   if(ackReceived==0)    // verify unsuccessful
     bValue=-1;
 
-  INTERFACE.print("<r");
-  INTERFACE.print(callBack);
-  INTERFACE.print("|");
-  INTERFACE.print(callBackSub);
-  INTERFACE.print("|");
+  INTERFACE.print("<r ");
   INTERFACE.print(cv+1);
   INTERFACE.print(" ");
   INTERFACE.print(bValue);
-  INTERFACE.print(">");
+  INTERFACE.println(">");
 
 } // RegisterList::writeCVByte()
   
@@ -335,9 +331,9 @@ void RegisterList::writeCVByte(char *s) volatile{
 void RegisterList::writeCVBit(char *s) volatile{
   byte bWrite[4];
   int bNum,bValue;
-  int cv, callBack, callBackSub;
+  int cv;
 
-  if(sscanf(s,"%d %d %d %d %d",&cv,&bNum,&bValue,&callBack,&callBackSub)!=5)          // cv = 1-1024
+  if(sscanf(s,"%d %d %d",&cv,&bNum,&bValue)!=3)          // cv = 1-1024
     return;    
   cv--;                              // actual CV addresses are cv-1 (0-1023)
 
@@ -367,17 +363,13 @@ void RegisterList::writeCVBit(char *s) volatile{
   if(ackReceived==0)    // verify unsuccessful
     bValue=-1;
   
-  INTERFACE.print("<r");
-  INTERFACE.print(callBack);
-  INTERFACE.print("|");
-  INTERFACE.print(callBackSub);
-  INTERFACE.print("|");
+  INTERFACE.print("<r ");
   INTERFACE.print(cv+1);
   INTERFACE.print(" ");
   INTERFACE.print(bNum);
   INTERFACE.print(" ");
   INTERFACE.print(bValue);
-  INTERFACE.print(">");
+  INTERFACE.println(">");
 
 } // RegisterList::writeCVBit()
   

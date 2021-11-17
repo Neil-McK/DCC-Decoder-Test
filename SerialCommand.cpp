@@ -18,6 +18,9 @@ Part of DCC++ BASE STATION for the Arduino
 #include "DCCpp_Uno.h"
 
 extern int __heap_start, *__brkval;
+/* NMCK ADDED START */
+extern void ParsePulseCommand(char *c);
+/* NMCK ADDED END */
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,42 +43,19 @@ void SerialCommand::init(RegisterList *_mRegs, RegisterList *_pRegs, CurrentMoni
 void SerialCommand::process(){
   char c;
     
-  #if COMM_TYPE == 0
-
-    while(INTERFACE.available()>0){    // while there is data on the serial line
-     c=INTERFACE.read();
-     if(c=='<')                    // start of new command
-      commandString[0] = 0;
-     else if(c=='>')               // end of new command
-       parse(commandString);                    
-     else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from serial line
-       sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
-    } // while
+  while(INTERFACE.available()>0){    // while there is data on the serial line
+    c=INTERFACE.read();
+    if(c=='<')                    // start of new command
+    commandString[0] = 0;
+    else if(c=='>')               // end of new command
+      parse(commandString);                    
+    else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from serial line
+      sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
+  } // while
   
-  #elif COMM_TYPE == 1
-
-    EthernetClient client=INTERFACE.available();
-
-    if(client){
-      while(client.connected() && client.available()){        // while there is data on the network
-      c=client.read();
-      if(c=='<')                    // start of new command
-         commandString[0] = 0; 
-      else if(c=='>')               // end of new command
-        parse(commandString);                    
-      else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from network
-        sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
-      } // while
-    }
-
-  #endif
-
 } // SerialCommand:process
    
 ///////////////////////////////////////////////////////////////////////////////
-/* NMCK ADDED START */
-extern void ParsePulseCommand(char *c);
-/* NMCK ADDED END */
 
 void SerialCommand::parse(char *com){
   
@@ -262,7 +242,7 @@ void SerialCommand::parse(char *com){
  */    
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,HIGH);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,HIGH);
-     INTERFACE.print("<p1>");
+     INTERFACE.println("<p1>");
      break;
           
 /***** TURN OFF POWER FROM MOTOR SHIELD TO TRACKS  ****/    
@@ -275,7 +255,7 @@ void SerialCommand::parse(char *com){
  */
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,LOW);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,LOW);
-     INTERFACE.print("<p0>");
+     INTERFACE.println("<p0>");
      break;
 
 /***** READ MAIN OPERATIONS TRACK CURRENT  ****/    
@@ -289,7 +269,7 @@ void SerialCommand::parse(char *com){
  */
       INTERFACE.print("<a");
       INTERFACE.print(int(mMonitor->current));
-      INTERFACE.print(">");
+      INTERFACE.println(">");
       break;
 
 /***** READ STATUS OF DCC++ BASE STATION  ****/    
@@ -335,12 +315,7 @@ void SerialCommand::parse(char *com){
       INTERFACE.print(COMM_TYPE);
       INTERFACE.print(F(": "));
 
-      #if COMM_TYPE == 0
-        INTERFACE.print(F("SERIAL>"));
-      #elif COMM_TYPE == 1
-        INTERFACE.print(Ethernet.localIP());
-        INTERFACE.print(F(">"));
-      #endif
+      INTERFACE.println(F("SERIAL>"));
       
       break;
 
@@ -408,7 +383,7 @@ void SerialCommand::parse(char *com){
       int v; 
       INTERFACE.print("<f");
       INTERFACE.print((int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
-      INTERFACE.print(">");
+      INTERFACE.println(">");
       break;
 
 /***** LISTS BIT CONTENTS OF ALL INTERNAL DCC PACKET REGISTERS  ****/        
