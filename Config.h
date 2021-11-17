@@ -27,32 +27,5 @@ Part of DCC++ BASE STATION for the Arduino
 // DEFINE COMMUNICATIONS INTERFACE
 //
 //  0 = Built-in Serial Port
-//  1 = Arduino.cc Ethernet/SD-Card Shield
-//  2 = Arduino.org Ethernet/SD-Card Shield
-//  3 = Seeed Studio Ethernet/SD-Card Shield W5200
 
 #define COMM_INTERFACE   0
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE STATIC IP ADDRESS *OR* COMMENT OUT TO USE DHCP
-//
-
-//#define IP_ADDRESS { 192, 168, 1, 200 }
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE PORT TO USE FOR ETHERNET COMMUNICATIONS INTERFACE
-//
-
-#define ETHERNET_PORT 2560
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-// DEFINE MAC ADDRESS ARRAY FOR ETHERNET COMMUNICATIONS INTERFACE
-//
-
-#define MAC_ADDRESS {  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEF }
-
-/////////////////////////////////////////////////////////////////////////////////////
-

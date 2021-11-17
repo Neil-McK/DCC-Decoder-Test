@@ -12,7 +12,10 @@ tolerance they might allow.
 The program is a modification of the DCC++ Classic CommandStation, since this is not constrained to generating 
 '0' pulses that are twice the length of the '1' pulse, as DCC++EX is.  All that remains is the code for generating 
 DCC signals in response to commands sent over the serial line.  All that has been added is a command that allows the 
-pulse lengths for '1' and '0' bits to be set on-the-fly.  Only the Arduino Mega is supported
+pulse lengths for '1' and '0' bits to be set on-the-fly.  Only the Arduino Mega is supported.
+
+*Because of the architecture of DCC++ Classic, in order to use the Programming track there must be a jumper connection
+made between pins 2 and 13 of the Arduino motor shield.*
 
 The new command is in the form `<l 1|0 n>` where the first character is lower-case 'L', and `n` is an integer.
 So to set the defaults, you would send `<l 1 58><l 0 100>`.  To increase the length of the '1' pulse,

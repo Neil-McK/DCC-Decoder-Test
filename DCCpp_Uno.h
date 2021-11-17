@@ -30,7 +30,20 @@ Part of DCC++ BASE STATION for the Arduino
   #define ARDUINO_AVR_MEGA2560
 #endif
 
-#if defined  ARDUINO_AVR_MEGA2560
+#if defined  ARDUINO_AVR_UNO
+
+  #define ARDUINO_TYPE    "UNO"
+
+  #define DCC_SIGNAL_PIN_MAIN 10          // Ardunio Uno  - uses OC1B
+  #define DCC_SIGNAL_PIN_PROG 5           // Arduino Uno  - uses OC0B
+
+  #if COMM_INTERFACE != 0                 // Serial was not selected
+
+    #error CANNOT COMPILE - DCC++ FOR THE UNO CAN ONLY USE SERIAL COMMUNICATION - PLEASE SELECT THIS IN THE CONFIG FILE
+
+  #endif
+
+#elif defined  ARDUINO_AVR_MEGA2560
 
   #define ARDUINO_TYPE    "MEGA"
 
@@ -83,22 +96,8 @@ Part of DCC++ BASE STATION for the Arduino
 // SELECT COMMUNICATION INTERACE
 /////////////////////////////////////////////////////////////////////////////////////
 
-#if COMM_INTERFACE == 0
-
-  #define COMM_TYPE 0
-  #define INTERFACE Serial
-
-#elif (COMM_INTERFACE==1) || (COMM_INTERFACE==2) || (COMM_INTERFACE==3)
-
-  #define COMM_TYPE 1
-  #define INTERFACE eServer
-  #define SDCARD_CS 4
-  
-#else
-
-  #error CANNOT COMPILE - Please select a proper value for COMM_INTERFACE in CONFIG.H file
-
-#endif
+#define COMM_TYPE 0
+#define INTERFACE Serial
 
 /////////////////////////////////////////////////////////////////////////////////////
 // SET WHETHER TO SHOW PACKETS - DIAGNOSTIC MODE ONLY
